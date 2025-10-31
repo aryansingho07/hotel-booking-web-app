@@ -8,7 +8,8 @@
     "server": "nodemon server/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "install-all": "npm install && cd client && npm install"
+    "install-all": "npm install && cd client && npm install",
+    "seed": "node server/seedDatabase.js"
   },
   "keywords": ["hotel", "booking", "react", "mongodb", "express"],
   "author": "",

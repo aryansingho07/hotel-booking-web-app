@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const Hotel = require('../models/Hotel');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const Hotel = require('./models/Hotel');
 
-const dummyHotels = [
+dotenv.config();
+
+const hotelData = [
   {
-    _id: '1',
     name: 'Grand Plaza Hotel',
     city: 'New York',
     pricePerNight: 250,
@@ -21,7 +22,6 @@ const dummyHotels = [
     ]
   },
   {
-    _id: '2',
     name: 'Seaside Resort',
     city: 'Miami',
     pricePerNight: 180,
@@ -37,7 +37,6 @@ const dummyHotels = [
     ]
   },
   {
-    _id: '3',
     name: 'Mountain Lodge',
     city: 'Denver',
     pricePerNight: 150,
@@ -53,7 +52,6 @@ const dummyHotels = [
     ]
   },
   {
-    _id: '4',
     name: 'Downtown Inn',
     city: 'Chicago',
     pricePerNight: 120,
@@ -69,7 +67,6 @@ const dummyHotels = [
     ]
   },
   {
-    _id: '5',
     name: 'Golden Gate Hotel',
     city: 'San Francisco',
     pricePerNight: 200,
@@ -85,7 +82,6 @@ const dummyHotels = [
     ]
   },
   {
-    _id: '6',
     name: 'Desert Oasis',
     city: 'Phoenix',
     pricePerNight: 140,
@@ -102,54 +98,33 @@ const dummyHotels = [
   }
 ];
 
-router.get('/', async (req, res) => {
+const seedDatabase = async () => {
   try {
-    const hotels = await Hotel.find();
+    console.log('Connecting to MongoDB Atlas...');
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Connected to MongoDB Atlas successfully!');
 
-    if (hotels.length > 0) {
-      res.json(hotels);
-    } else {
-      console.log('No hotels found in database. Run "npm run seed" to populate the database.');
-      res.json(dummyHotels);
-    }
+    console.log('\nClearing existing hotels...');
+    await Hotel.deleteMany({});
+    console.log('Cleared existing hotel data');
+
+    console.log('\nInserting hotel data...');
+    const insertedHotels = await Hotel.insertMany(hotelData);
+    console.log(`Successfully inserted ${insertedHotels.length} hotels`);
+
+    console.log('\nHotels in database:');
+    insertedHotels.forEach((hotel, index) => {
+      console.log(`${index + 1}. ${hotel.name} - ${hotel.city} - $${hotel.pricePerNight}/night - ${hotel.rooms.length} rooms`);
+    });
+
+    console.log('\nDatabase seeding completed successfully!');
+    console.log('You can now start your server with: npm run dev');
+
+    process.exit(0);
   } catch (error) {
-    console.log('Database error, using dummy data:', error.message);
-    res.json(dummyHotels);
+    console.error('Error seeding database:', error.message);
+    process.exit(1);
   }
-});
+};
 
-router.get('/:id', async (req, res) => {
-  try {
-    const hotel = await Hotel.findById(req.params.id);
-
-    if (hotel) {
-      res.json(hotel);
-    } else {
-      const dummyHotel = dummyHotels.find(h => h._id === req.params.id);
-      if (dummyHotel) {
-        res.json(dummyHotel);
-      } else {
-        res.status(404).json({ message: 'Hotel not found' });
-      }
-    }
-  } catch (error) {
-    const dummyHotel = dummyHotels.find(h => h._id === req.params.id);
-    if (dummyHotel) {
-      res.json(dummyHotel);
-    } else {
-      res.status(404).json({ message: 'Hotel not found' });
-    }
-  }
-});
-
-router.post('/', async (req, res) => {
-  try {
-    const hotel = new Hotel(req.body);
-    const savedHotel = await hotel.save();
-    res.status(201).json(savedHotel);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-module.exports = router;
+seedDatabase();

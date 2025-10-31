@@ -1,259 +1,267 @@
 # Hotel Booking Web Application
 
-A full-stack hotel booking application built with React, Node.js, Express, and MongoDB.
+A full-stack hotel booking application built with React, Node.js, Express, and MongoDB Atlas.
 
 ## Features
 
-### Implemented Features
-- **Landing Page**: Browse all available hotels with search functionality
-- **Hotel Details Page**: View detailed information about hotels and available rooms
-- **Booking Form**: Complete booking with validation (check-in/out dates, guest count)
-- **Admin Dashboard**: View all bookings, statistics, and manage reservations
-- **Responsive Design**: Mobile-friendly interface using Bootstrap
-- **Single Page Application**: Smooth navigation with React Router
-- **API Integration**: RESTful API with Express and MongoDB
+### Core Features
+- Landing page with hotel listings and search functionality
+- Hotel details page with room information
+- Booking form with comprehensive validation
+- Admin dashboard for managing bookings
+- Responsive design with Bootstrap 5
+- Single Page Application with React Router
+- RESTful API with MongoDB Atlas integration
 
-### Key Highlights
-- Form validation with error messages
+### Validation
 - Date validation (no past dates, check-out after check-in)
-- Email validation
+- Email format validation
 - Guest capacity validation
 - Real-time price calculation
-- Dummy data fallback when MongoDB is not connected
-- Professional UI with Bootstrap styling
+- Server-side and client-side validation
 
 ## Tech Stack
 
-**Frontend:**
+**Frontend**
 - React 18
 - React Router DOM 6
 - Bootstrap 5
 - Axios
 
-**Backend:**
+**Backend**
 - Node.js
 - Express.js
-- MongoDB with Mongoose
-- CORS
+- MongoDB Atlas with Mongoose
+- CORS & Body Parser
 
 ## Project Structure
 
 ```
 hotel-web-app/
-├── client/                     # React frontend
+├── client/                   # React frontend
 │   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── LandingPage.js       # Home page with hotel listings
-│   │   │   ├── HotelDetails.js      # Hotel details and rooms
-│   │   │   ├── BookingPage.js       # Booking form
-│   │   │   └── AdminPage.js         # Admin dashboard
-│   │   ├── services/
-│   │   │   └── api.js               # API service layer
-│   │   ├── App.js                   # Main app component
-│   │   ├── index.js
-│   │   └── index.css
-│   └── package.json
-├── server/                     # Express backend
-│   ├── models/
-│   │   ├── Hotel.js                 # Hotel schema
-│   │   └── Booking.js               # Booking schema
-│   ├── routes/
-│   │   ├── hotels.js                # Hotel routes
-│   │   └── bookings.js              # Booking routes
-│   └── server.js                    # Express server
-├── .env                        # Environment variables
+│   └── src/
+│       ├── pages/           # Landing, Details, Booking, Admin pages
+│       ├── services/        # API integration
+│       ├── App.js
+│       └── index.js
+├── server/                  # Express backend
+│   ├── models/             # Mongoose schemas
+│   ├── routes/             # API endpoints
+│   ├── seedDatabase.js     # Database seeding script
+│   └── server.js
+├── .env                    # Environment variables
 ├── .gitignore
-├── package.json
-└── README.md
+└── package.json
 ```
 
-## Installation & Setup
+## Installation
 
 ### Prerequisites
 - Node.js (v14 or higher)
 - npm or yarn
-- MongoDB (local or MongoDB Atlas)
 
-### Step 1: Install Dependencies
+### Setup
 
-**Install backend dependencies:**
+1. Install backend dependencies:
 ```bash
 npm install
 ```
 
-**Install frontend dependencies:**
+2. Install frontend dependencies:
 ```bash
 cd client
 npm install
 cd ..
 ```
 
-Or use the combined command:
+Or install all at once:
 ```bash
 npm run install-all
 ```
 
-### Step 2: Configure Environment Variables
+### Environment Variables
 
-Edit the `.env` file in the root directory:
-
+The `.env` file is configured with MongoDB Atlas connection:
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/hotel-booking
+MONGODB_URI=mongodb+srv://aryan:Terabaap95203@mongocluster.btn0uq7.mongodb.net/hotel-booking
 ```
 
-**For MongoDB Atlas:**
-Replace with your connection string:
-```env
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/hotel-booking
+### Database Seeding
+
+Populate MongoDB with sample hotel data:
+```bash
+npm run seed
 ```
 
-### Step 3: Start the Application
+This will insert 6 hotels into your MongoDB Atlas database.
 
-**Option 1: Run both frontend and backend together (Recommended)**
+## Running the Application
+
+### Start both frontend and backend:
 ```bash
 npm run dev
 ```
 
-**Option 2: Run separately**
+### Start separately:
 
-Terminal 1 (Backend):
+Backend only:
 ```bash
 npm run server
 ```
 
-Terminal 2 (Frontend):
+Frontend only:
 ```bash
 npm run client
 ```
 
-### Step 4: Access the Application
+### Access the Application
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000/api
+- Health Check: http://localhost:5000/api/health
 
-- **Frontend:** http://localhost:3000
-- **Backend API:** http://localhost:5000/api
-- **API Health Check:** http://localhost:5000/api/health
+## API Endpoints
 
-## Usage
-
-### Without MongoDB (Dummy Data Mode)
-
-The application works perfectly without MongoDB by using in-memory dummy data:
-- 6 pre-configured hotels with rooms
-- Bookings stored in memory (resets on server restart)
-
-### With MongoDB
-
-To use MongoDB:
-
-1. **Install MongoDB locally** or **create a MongoDB Atlas account**
-
-2. **Update .env file** with your connection string
-
-3. **Start the server** - it will automatically connect to MongoDB
-
-4. **Optional: Seed the database** with hotel data using the dummy data from the API routes
-
-### API Endpoints
-
-**Hotels:**
+### Hotels
 - `GET /api/hotels` - Get all hotels
-- `GET /api/hotels/:id` - Get hotel by ID
-- `POST /api/hotels` - Create new hotel (admin)
+- `GET /api/hotels/:id` - Get single hotel
+- `POST /api/hotels` - Create new hotel
 
-**Bookings:**
+### Bookings
 - `GET /api/bookings` - Get all bookings
-- `GET /api/bookings/:id` - Get booking by ID
 - `POST /api/bookings` - Create new booking
 - `DELETE /api/bookings/:id` - Delete booking
 
-## Features Walkthrough
+## Database Schema
 
-### 1. Landing Page
-- View all available hotels
-- Search hotels by city
-- See hotel ratings, prices, and images
-- Click "Book Now" to view hotel details
+### Hotel Schema
+```javascript
+{
+  name: String,
+  city: String,
+  pricePerNight: Number,
+  image: String,
+  description: String,
+  rating: Number,
+  amenities: [String],
+  address: String,
+  phone: String,
+  rooms: [{
+    roomType: String,
+    price: Number,
+    available: Boolean,
+    capacity: Number,
+    amenities: [String]
+  }]
+}
+```
 
-### 2. Hotel Details Page
-- View comprehensive hotel information
-- See all available rooms with prices
-- Check room amenities and capacity
-- Click "Book This Room" to start booking
+### Booking Schema
+```javascript
+{
+  hotelId: ObjectId,
+  hotelName: String,
+  roomType: String,
+  userName: String,
+  userEmail: String,
+  checkInDate: Date,
+  checkOutDate: Date,
+  numberOfGuests: Number,
+  totalPrice: Number,
+  status: String
+}
+```
 
-### 3. Booking Form
-- Enter personal information (name, email)
-- Select check-in and check-out dates
-- Specify number of guests
-- View automatic price calculation
-- Form validation with helpful error messages
-- Confirmation message on successful booking
+## Available Scripts
 
-### 4. Admin Dashboard
-- View all bookings in a table
-- See statistics (total bookings, revenue, guests)
-- Delete bookings
-- No authentication required (as per requirements)
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Run both frontend and backend |
+| `npm run server` | Run backend only |
+| `npm run client` | Run frontend only |
+| `npm run seed` | Populate database with hotels |
+| `npm run install-all` | Install all dependencies |
+
+## Sample Hotels
+
+The database includes 6 pre-configured hotels:
+1. Grand Plaza Hotel - New York - $250/night
+2. Seaside Resort - Miami - $180/night
+3. Mountain Lodge - Denver - $150/night
+4. Downtown Inn - Chicago - $120/night
+5. Golden Gate Hotel - San Francisco - $200/night
+6. Desert Oasis - Phoenix - $140/night
+
+## Application Flow
+
+1. **Browse Hotels**: Users view hotels on the landing page with search
+2. **View Details**: Click on a hotel to see rooms and amenities
+3. **Book Room**: Select a room and fill out the booking form
+4. **Confirmation**: Booking is saved to MongoDB and confirmed
+5. **Admin View**: View all bookings in the admin dashboard
 
 ## Validation Rules
 
-- **Name**: Required, minimum 2 characters
-- **Email**: Required, valid email format
-- **Check-in Date**: Required, cannot be in the past
-- **Check-out Date**: Required, must be after check-in date
-- **Number of Guests**: Required, minimum 1, cannot exceed room capacity
+| Field | Rules |
+|-------|-------|
+| Name | Required, minimum 2 characters |
+| Email | Required, valid email format |
+| Check-in | Required, cannot be in past |
+| Check-out | Required, must be after check-in |
+| Guests | Required, minimum 1, max = room capacity |
 
-## Dummy Hotels Data
+## MongoDB Atlas
 
-The application includes 6 pre-configured hotels:
-1. Grand Plaza Hotel (New York) - $250/night
-2. Seaside Resort (Miami) - $180/night
-3. Mountain Lodge (Denver) - $150/night
-4. Downtown Inn (Chicago) - $120/night
-5. Golden Gate Hotel (San Francisco) - $200/night
-6. Desert Oasis (Phoenix) - $140/night
+The application is connected to MongoDB Atlas cloud database:
+- Database: `hotel-booking`
+- Collections: `hotels`, `bookings`
+- Connection string configured in `.env`
 
-## Future Enhancements
+To re-seed the database at any time:
+```bash
+npm run seed
+```
 
-Potential improvements for production:
-- User authentication and authorization
-- Admin authentication
-- Payment gateway integration
-- Email confirmation for bookings
-- Room availability tracking
-- Image upload functionality
-- Advanced search filters
-- Booking modification and cancellation
-- User profile and booking history
-- Reviews and ratings system
+## Development Notes
+
+### Data Fallback
+If MongoDB connection fails, the application falls back to in-memory dummy data to ensure functionality.
+
+### Security
+- `.env` file is in `.gitignore`
+- Input validation on both client and server
+- MongoDB injection protection via Mongoose
 
 ## Troubleshooting
 
-**Port already in use:**
-- Change the PORT in `.env` file
-- Kill the process using the port
+**MongoDB Connection Error**
+- Verify internet connection
+- Check MongoDB Atlas cluster status
+- Ensure IP is whitelisted in MongoDB Atlas
+- Verify connection string in `.env`
 
-**MongoDB connection error:**
-- Verify MongoDB is running (if local)
-- Check connection string in `.env`
-- The app will fallback to dummy data if connection fails
+**Port Already in Use**
+- Change PORT in `.env` file
+- Kill process using the port
 
-**Frontend not connecting to backend:**
-- Verify backend is running on port 5000
-- Check `proxy` setting in `client/package.json`
+**No Hotels Displayed**
+- Run `npm run seed` to populate database
+- Check server logs for connection status
 
-## Credits
+## Production Deployment
 
-Built as an intern task demonstration project showcasing:
-- HTML, CSS, JavaScript
-- React with React Router
-- Node.js and Express
-- MongoDB with Mongoose
-- RESTful API design
-- Form validation
-- Responsive design
+For production deployment:
+1. Set environment variables in hosting platform
+2. Build React app: `cd client && npm run build`
+3. Deploy backend to Heroku/Railway/Render
+4. Deploy frontend to Vercel/Netlify
+5. Update CORS settings for production URLs
 
 ## License
 
 This project is for educational and demonstration purposes.
+
+## Author
+
+Built as an intern task demonstration showcasing full-stack development skills with React, Express, and MongoDB.
