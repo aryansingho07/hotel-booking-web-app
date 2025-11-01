@@ -1,5 +1,5 @@
 # Hotel Booking Web Application
-
+[![▶️ Watch the Demo Video](https://cdn.pixabay.com/photo/2021/01/19/14/18/youtube-5931353_1280.jpg)](https://youtu.be/LZY8P_6SxAU)
 A full-stack hotel booking application built with React, Node.js, Express, and MongoDB.
 
 ## Features
